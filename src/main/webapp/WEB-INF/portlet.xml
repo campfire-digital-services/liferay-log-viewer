@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * Copyright (c) 2013 Permeance Technologies. All rights reserved.
+ * 
+ * This file is part of Log Viewer.
+ * 
+ * Log Viewer is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation, either version 3
+ * of the License, or (at your option) any later version.
+ * 
+ * Log Viewer is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with Log Viewer.
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+-->
+
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" 
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+             version="2.0" 
+             xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd">
+	<portlet>
+		<portlet-name>log-viewer</portlet-name>
+		<display-name>Log Viewer</display-name>
+		<portlet-class>com.permeance.utility.logviewer.portlets.LogViewerPortlet</portlet-class>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<resource-bundle>content/Language</resource-bundle>
+		<portlet-info>
+			<title>Log Viewer</title>
+			<short-title>Log Viewer</short-title>
+			<keywords>permeance log viewer</keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+	</portlet>
+</portlet-app>
