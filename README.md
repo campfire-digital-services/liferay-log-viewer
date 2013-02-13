@@ -21,7 +21,7 @@ The latest releases are available from [SourceForge](http://sourceforge.net/proj
 Administrators will see a "Log Viewer" portlet in the Server area of the Control Panel.
 Other users can also be assigned permissions to see the Log Viewer Portlet.
 
-![Log Viewer Portlet](/docs/images/log-viewer-screenshot.png "Log Viewer Portlet")
+![Log Viewer Portlet](/doc/images/log-viewer-screenshot.png "Log Viewer Portlet")
 
 The page polls the log buffer every 2 seconds to update the page with the latest logs.
 You can also attach or detach the logger from the portal log4j. (when detached, the portlet does not cause any overhead on portal operations).
