@@ -26,30 +26,47 @@ import javax.servlet.ServletContextListener;
  * LogViewerListener
  * 
  * @author Chun Ho <chun.ho@permeance.com.au>
+ * @see StartupServlet
  */
 public class LogViewerListener implements ServletContextListener {
     private static Log _log = LogFactoryUtil.getLog(LogViewerListener.class);
 
     public void contextInitialized(ServletContextEvent arg0) {
-        _log.info("Log Viewer Startup");
-
-        try {
-            boolean autoAttach = GetterUtil.getBoolean(PropsUtil.get("permeance.log.viewer.autoattach"), true);
-
-            if (autoAttach) {
-                _log.info("Autoattaching logger");
-                LogHolder.attach();
-            } else {
-                _log.info("NOT autoattaching logger");
-            }
-        } catch (Exception e) {
-            _log.error(e);
-        }
+        startApplication();
     }
 
     public void contextDestroyed(ServletContextEvent arg0) {
-        LogHolder.detach();
-        _log.info("Log Viewer Shutdown");
+        stopApplication();
+    }
+
+    private static boolean appStarted = false;
+
+    public static void startApplication() {
+        if (!appStarted) {
+            appStarted = true;
+            _log.info("Log Viewer Startup");
+
+            try {
+                boolean autoAttach = GetterUtil.getBoolean(PropsUtil.get("permeance.log.viewer.autoattach"), true);
+
+                if (autoAttach) {
+                    _log.info("Autoattaching logger");
+                    LogHolder.attach();
+                } else {
+                    _log.info("NOT autoattaching logger");
+                }
+            } catch (Exception e) {
+                _log.error(e);
+            }
+        }
+    }
+
+    public static void stopApplication() {
+        if (appStarted) {
+            appStarted = false;
+            LogHolder.detach();
+            _log.info("Log Viewer Shutdown");
+        }
     }
 
 }

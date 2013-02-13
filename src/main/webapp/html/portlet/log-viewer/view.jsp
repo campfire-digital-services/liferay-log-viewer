@@ -33,9 +33,11 @@ not, see <http://www.gnu.org/licenses/>.
 			    dataType: 'json',
 			    on: {
 			        success: function() {
-			            window.resourcePointer = this.get('responseData').pointer;
-			            document.getElementById("viewlog").innerHTML = document.getElementById("viewlog").innerHTML + this.get('responseData').content;
-			            document.getElementById("viewlogmode").innerHTML = this.get('responseData').mode;
+			            if(typeof this.get('responseData') != 'undefined') {
+				            window.resourcePointer = this.get('responseData').pointer;
+				            document.getElementById("viewlog").innerHTML = document.getElementById("viewlog").innerHTML + this.get('responseData').content;
+				            document.getElementById("viewlogmode").innerHTML = this.get('responseData').mode;
+			            }
 			        }
 			    }
 			});

@@ -19,5 +19,14 @@ not, see <http://www.gnu.org/licenses/>.
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 	<listener>
 		<listener-class>com.permeance.utility.logviewer.portlets.LogViewerListener</listener-class>
-	</listener>	
+	</listener>
+	
+	<!-- 
+	see StartupServlet comments on why this is being used.
+	 -->	
+	<servlet>
+		<servlet-name>Startup</servlet-name>
+		<servlet-class>com.permeance.utility.logviewer.portlets.StartupServlet</servlet-class>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
 </web-app>

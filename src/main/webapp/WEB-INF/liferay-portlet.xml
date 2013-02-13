@@ -21,8 +21,7 @@ not, see <http://www.gnu.org/licenses/>.
 		<portlet-name>log-viewer</portlet-name>
 		<icon>/log-viewer.png</icon>
 		<control-panel-entry-category>server</control-panel-entry-category>
-		<control-panel-entry-weight>1.0</control-panel-entry-weight>
-		<control-panel-entry-class>com.permeance.utility.logviewer.portlets.LogViewerControlPanelEntry</control-panel-entry-class>
+		<control-panel-entry-weight>1.1</control-panel-entry-weight>
 		<preferences-company-wide>true</preferences-company-wide>
 		<instanceable>false</instanceable>
 	</portlet>
