@@ -14,9 +14,6 @@
  */
 package com.permeance.utility.logviewer.portlets;
 
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -24,9 +21,9 @@ import javax.servlet.http.HttpServlet;
 /**
  * StartupServlet
  * 
- * In testing, we are experiencing some cases where after the plugin security manager has been
- * enabled, the LogViewerListener would not fire (plausibly due to timing between when the deploy
- * event is set and when SecurePluginContextListener registers it). This happens on both CE and EE.
+ * In testing, we are experiencing in some cases if the plugin security manager has been enabled,
+ * the LogViewerListener would not fire (plausibly due to timing between when the deploy event is
+ * set and when SecurePluginContextListener registers it). This happens on both CE and EE.
  * 
  * This startup servlet is a workaround for those cases that need it.
  * 
@@ -34,10 +31,10 @@ import javax.servlet.http.HttpServlet;
  */
 public class StartupServlet extends HttpServlet {
 
-    public static final Log _log = LogFactoryUtil.getLog(StartupServlet.class);
+    private static final long serialVersionUID = -6901057353413540073L;
 
     @Override
-    public void init(ServletConfig config) throws ServletException {
+    public void init(final ServletConfig config) throws ServletException {
         super.init(config);
         LogViewerListener.startApplication();
     }

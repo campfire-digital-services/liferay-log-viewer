@@ -29,43 +29,44 @@ import javax.servlet.ServletContextListener;
  * @see StartupServlet
  */
 public class LogViewerListener implements ServletContextListener {
-    private static Log _log = LogFactoryUtil.getLog(LogViewerListener.class);
 
-    public void contextInitialized(ServletContextEvent arg0) {
+    private static final Log log = LogFactoryUtil.getLog(LogViewerListener.class);
+
+    public void contextInitialized(final ServletContextEvent arg0) {
         startApplication();
     }
 
-    public void contextDestroyed(ServletContextEvent arg0) {
+    public void contextDestroyed(final ServletContextEvent arg0) {
         stopApplication();
     }
 
     private static boolean appStarted = false;
 
-    public static void startApplication() {
+    public static synchronized void startApplication() {
         if (!appStarted) {
             appStarted = true;
-            _log.info("Log Viewer Startup");
+            log.info("Log Viewer Startup");
 
             try {
-                boolean autoAttach = GetterUtil.getBoolean(PropsUtil.get("permeance.log.viewer.autoattach"), true);
+                final boolean autoAttach = GetterUtil.getBoolean(PropsUtil.get("permeance.log.viewer.autoattach"), true);
 
                 if (autoAttach) {
-                    _log.info("Autoattaching logger");
+                    log.info("Autoattaching logger");
                     LogHolder.attach();
                 } else {
-                    _log.info("NOT autoattaching logger");
+                    log.info("NOT autoattaching logger");
                 }
-            } catch (Exception e) {
-                _log.error(e);
+            } catch (final Exception e) {
+                log.error(e);
             }
         }
     }
 
-    public static void stopApplication() {
+    public static synchronized void stopApplication() {
         if (appStarted) {
             appStarted = false;
             LogHolder.detach();
-            _log.info("Log Viewer Shutdown");
+            log.info("Log Viewer Shutdown");
         }
     }
 

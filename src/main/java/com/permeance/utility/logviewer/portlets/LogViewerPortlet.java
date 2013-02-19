@@ -21,9 +21,6 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.security.permission.PermissionChecker;
-import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
 import java.io.IOException;
@@ -31,7 +28,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import javax.portlet.PortletException;
-import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
@@ -43,69 +39,65 @@ import javax.portlet.ResourceResponse;
  * @author Chun Ho <chun.ho@permeance.com.au>
  */
 public class LogViewerPortlet extends MVCPortlet {
-    public static Log _log = LogFactoryUtil.getLog(LogViewerPortlet.class);
 
-    public static void checkPermissions(PortletRequest request) throws Exception {
-        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-        PermissionChecker permissionChecker = themeDisplay.getPermissionChecker();
+    public static final Log log = LogFactoryUtil.getLog(LogViewerPortlet.class);
 
-        if (!permissionChecker.isOmniadmin() && !permissionChecker.isCompanyAdmin()) {
-            throw new Exception("No permissions to execute this request");
-        }
-    }
-
+    /**
+     * view method
+     */
     @Override
-    public void doView(RenderRequest renderRequest, RenderResponse renderResponse) throws IOException, PortletException {
+    public void doView(final RenderRequest renderRequest, final RenderResponse renderResponse) throws IOException, PortletException {
         try {
-            LogViewerPortlet.checkPermissions(renderRequest);
             include("/html/portlet/log-viewer/view.jsp", renderRequest, renderResponse);
-        } catch (Exception e) {
-            _log.warn(e);
+        } catch (final Exception e) {
+            log.warn(e);
             include("/html/portlet/log-viewer/error.jsp", renderRequest, renderResponse);
         }
     }
 
+    /**
+     * serveResource method
+     */
     @Override
-    public void serveResource(ResourceRequest resourceRequest, ResourceResponse resourceResponse) {
+    public void serveResource(final ResourceRequest resourceRequest, final ResourceResponse resourceResponse) {
         try {
-            LogViewerPortlet.checkPermissions(resourceRequest);
             resourceResponse.setContentType("text/json");
             resourceResponse.addProperty(HttpHeaders.CACHE_CONTROL, "no-cache");
 
-            String cmd = resourceRequest.getParameter("cmd");
+            final String cmd = resourceRequest.getParameter("cmd");
 
             if ("attach".equals(cmd)) {
                 try {
                     LogHolder.attach();
-                    JSONObject obj = JSONFactoryUtil.createJSONObject();
+                    final JSONObject obj = JSONFactoryUtil.createJSONObject();
                     obj.put("result", "success");
                     resourceResponse.getWriter().print(obj.toString());
-                } catch (Exception e) {
-                    StringWriter sw = new StringWriter();
-                    PrintWriter pw = new PrintWriter(sw);
+                } catch (final Exception e) {
+                    final StringWriter sw = new StringWriter();
+                    final PrintWriter pw = new PrintWriter(sw);
                     e.printStackTrace(pw);
                     pw.close();
                     sw.close();
 
-                    JSONObject obj = JSONFactoryUtil.createJSONObject();
+                    final JSONObject obj = JSONFactoryUtil.createJSONObject();
                     obj.put("result", "error");
                     obj.put("error", e.toString());
                     obj.put("trace", sw.toString());
 
                     resourceResponse.getWriter().print(obj.toString());
 
-                    _log.error(e);
+                    log.error(e);
                 }
             } else if ("detach".equals(cmd)) {
                 LogHolder.detach();
-                JSONObject obj = JSONFactoryUtil.createJSONObject();
+                final JSONObject obj = JSONFactoryUtil.createJSONObject();
                 obj.put("result", "success");
                 resourceResponse.getWriter().print(obj.toString());
             } else {
 
-                int pointer = GetterUtil.getInteger(resourceRequest.getParameter("pointer"), -1);
+                final int pointer = GetterUtil.getInteger(resourceRequest.getParameter("pointer"), -1);
 
-                RollingLogViewer viewer = LogHolder.getViewer();
+                final RollingLogViewer viewer = LogHolder.getViewer();
 
                 int curpointer = -1;
                 String content = StringPool.BLANK;
@@ -115,7 +107,7 @@ public class LogViewerPortlet extends MVCPortlet {
                     content = new String(viewer.getBuffer(pointer, curpointer));
                     mode = "attached";
                 }
-                JSONObject obj = JSONFactoryUtil.createJSONObject();
+                final JSONObject obj = JSONFactoryUtil.createJSONObject();
                 obj.put("pointer", Integer.toString(curpointer));
                 obj.put("content", content);
                 obj.put("mode", mode);
@@ -123,7 +115,7 @@ public class LogViewerPortlet extends MVCPortlet {
                 resourceResponse.getWriter().print(obj.toString());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn(e);
         }
     }
 

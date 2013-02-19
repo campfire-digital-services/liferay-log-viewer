@@ -29,7 +29,9 @@ import java.io.Writer;
  * @author Chun Ho <chun.ho@permeance.com.au>
  */
 public class LogHolder {
-    public static Log _log = LogFactoryUtil.getLog(LogHolder.class);
+
+    public static final Log log = LogFactoryUtil.getLog(LogHolder.class);
+
     private static LogRunnable runnable = null;
     private static Object writerAppenderObj = null;
     private static RollingLogViewer viewer = null;
@@ -42,32 +44,33 @@ public class LogHolder {
     public static synchronized void attach() throws Exception {
         if (!isAttached()) {
             try {
-                ClassLoader portalClassLoader = PortalClassLoaderUtil.getClassLoader();
-                Class logger = portalClassLoader.loadClass("org.apache.log4j.Logger");
-                Object rootLoggerObj = logger.getMethod("getRootLogger").invoke(null);
+                final ClassLoader portalClassLoader = PortalClassLoaderUtil.getClassLoader();
+                final Class logger = portalClassLoader.loadClass("org.apache.log4j.Logger");
+                final Object rootLoggerObj = logger.getMethod("getRootLogger").invoke(null);
 
-                Class patternLayout = portalClassLoader.loadClass("org.apache.log4j.PatternLayout");
+                final Class patternLayout = portalClassLoader.loadClass("org.apache.log4j.PatternLayout");
 
-                String pattern = GetterUtil.getString(PropsUtil.get("permeance.log.viewer.pattern"), "%d{ABSOLUTE} %-5p [%c{1}:%L] %m%n");
+                final String pattern = GetterUtil.getString(PropsUtil.get("permeance.log.viewer.pattern"),
+                        "%d{ABSOLUTE} %-5p [%c{1}:%L] %m%n");
 
-                Object patternLayoutObj = patternLayout.getConstructor(String.class).newInstance(pattern);
+                final Object patternLayoutObj = patternLayout.getConstructor(String.class).newInstance(pattern);
 
-                CharArrayWriter pwriter = new CharArrayWriter();
+                final CharArrayWriter pwriter = new CharArrayWriter();
                 viewer = new RollingLogViewer();
                 runnable = new LogRunnable(pwriter, viewer);
-                Thread t = new Thread(runnable);
+                final Thread t = new Thread(runnable);
                 t.start();
 
-                Class writerAppender = portalClassLoader.loadClass("org.apache.log4j.WriterAppender");
+                final Class writerAppender = portalClassLoader.loadClass("org.apache.log4j.WriterAppender");
 
-                Class appender = portalClassLoader.loadClass("org.apache.log4j.Appender");
-                Class layout = portalClassLoader.loadClass("org.apache.log4j.Layout");
+                final Class appender = portalClassLoader.loadClass("org.apache.log4j.Appender");
+                final Class layout = portalClassLoader.loadClass("org.apache.log4j.Layout");
                 writerAppenderObj = writerAppender.getConstructor(layout, Writer.class).newInstance(patternLayoutObj, pwriter);
 
                 logger.getMethod("addAppender", appender).invoke(rootLoggerObj, writerAppenderObj);
                 attached = true;
-            } catch (Exception e) {
-                _log.error(e);
+            } catch (final Exception e) {
+                log.error(e);
                 throw e;
             }
         }
@@ -78,13 +81,13 @@ public class LogHolder {
             try {
                 runnable.setStop(true);
 
-                ClassLoader portalClassLoader = PortalClassLoaderUtil.getClassLoader();
-                Class logger = portalClassLoader.loadClass("org.apache.log4j.Logger");
-                Object rootLoggerObj = logger.getMethod("getRootLogger").invoke(null);
-                Class appender = portalClassLoader.loadClass("org.apache.log4j.Appender");
+                final ClassLoader portalClassLoader = PortalClassLoaderUtil.getClassLoader();
+                final Class logger = portalClassLoader.loadClass("org.apache.log4j.Logger");
+                final Object rootLoggerObj = logger.getMethod("getRootLogger").invoke(null);
+                final Class appender = portalClassLoader.loadClass("org.apache.log4j.Appender");
                 logger.getMethod("removeAppender", appender).invoke(rootLoggerObj, writerAppenderObj);
-            } catch (Exception e) {
-                _log.warn(e);
+            } catch (final Exception e) {
+                log.warn(e);
             }
         }
         runnable = null;
@@ -107,14 +110,14 @@ public class LogHolder {
             this.viewer = viewer;
         }
 
-        public void setStop(boolean stop) {
+        public void setStop(final boolean stop) {
             this.stop = stop;
         }
 
         public void run() {
             try {
                 while (true) {
-                    char[] buf = writer.toCharArray();
+                    final char[] buf = writer.toCharArray();
                     writer.reset();
                     if (buf.length > 0) {
                         viewer.write(buf, 0, buf.length);
@@ -125,12 +128,12 @@ public class LogHolder {
 
                     try {
                         Thread.sleep(1000);
-                    } catch (InterruptedException ie) {
+                    } catch (final InterruptedException ie) {
                     }
                 }
 
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (final Exception e) {
+                log.warn(e);
             }
         }
     }

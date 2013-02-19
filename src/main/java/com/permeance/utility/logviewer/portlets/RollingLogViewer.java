@@ -21,9 +21,18 @@ package com.permeance.utility.logviewer.portlets;
  */
 public class RollingLogViewer {
 
+    /**
+     * size of the character buffer array used to read and store logs
+     */
     public static final int CHAR_SIZE = 5 * 1024 * 1024;
 
+    /**
+     * number of characters of log to return at start
+     */
+    private static final int BACK_FILL_SIZE = 1000;
+
     private final char[] intbuf;
+
     private int pnt;
 
     public RollingLogViewer() {
@@ -31,9 +40,9 @@ public class RollingLogViewer {
         pnt = 0;
     }
 
-    public synchronized void write(char[] buf, int offset, int length) {
+    public synchronized void write(final char[] buf, final int offset, final int length) {
         if (pnt + length > intbuf.length) {
-            int offlength = intbuf.length - pnt;
+            final int offlength = intbuf.length - pnt;
             System.arraycopy(buf, offset, intbuf, pnt, offlength);
             System.arraycopy(buf, offset + offlength, intbuf, 0, length - offlength);
         } else {
@@ -47,9 +56,10 @@ public class RollingLogViewer {
         return pnt;
     }
 
-    public char[] getBuffer(int oldpointer, int newpointer) {
+    public char[] getBuffer(final int oldpointerparam, final int newpointer) {
+        int oldpointer = oldpointerparam;
         if (oldpointer == -1) {
-            oldpointer = ((newpointer - 1000) + intbuf.length) % intbuf.length;
+            oldpointer = ((newpointer - BACK_FILL_SIZE) + intbuf.length) % intbuf.length;
         }
 
         if (newpointer == oldpointer) {
@@ -57,13 +67,13 @@ public class RollingLogViewer {
         }
 
         if (newpointer > oldpointer) {
-            char[] toReturn = new char[newpointer - oldpointer];
+            final char[] toReturn = new char[newpointer - oldpointer];
             System.arraycopy(intbuf, oldpointer, toReturn, 0, newpointer - oldpointer);
             return toReturn;
         } else {
             // loop around
-            char[] toReturn = new char[intbuf.length - oldpointer + newpointer];
-            int offlength = intbuf.length - oldpointer;
+            final char[] toReturn = new char[intbuf.length - oldpointer + newpointer];
+            final int offlength = intbuf.length - oldpointer;
             System.arraycopy(intbuf, oldpointer, toReturn, 0, offlength);
             System.arraycopy(intbuf, 0, toReturn, offlength, newpointer);
             return toReturn;
