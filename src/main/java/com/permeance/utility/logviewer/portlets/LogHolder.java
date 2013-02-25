@@ -16,9 +16,7 @@ package com.permeance.utility.logviewer.portlets;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
-import com.liferay.portal.kernel.util.PropsUtil;
 
 import java.io.CharArrayWriter;
 import java.io.Writer;
@@ -45,13 +43,12 @@ public class LogHolder {
         if (!isAttached()) {
             try {
                 final ClassLoader portalClassLoader = PortalClassLoaderUtil.getClassLoader();
-                final Class logger = portalClassLoader.loadClass("org.apache.log4j.Logger");
-                final Object rootLoggerObj = logger.getMethod("getRootLogger").invoke(null);
+                final Class logger = portalClassLoader.loadClass(PortletConstants.LOG4J_LOGGER_CLASS);
+                final Object rootLoggerObj = logger.getMethod(PortletConstants.GET_ROOT_LOGGER).invoke(null);
 
-                final Class patternLayout = portalClassLoader.loadClass("org.apache.log4j.PatternLayout");
+                final Class patternLayout = portalClassLoader.loadClass(PortletConstants.LOG4J_PATTERN_LAYOUT_CLASS);
 
-                final String pattern = GetterUtil.getString(PropsUtil.get("permeance.log.viewer.pattern"),
-                        "%d{ABSOLUTE} %-5p [%c{1}:%L] %m%n");
+                final String pattern = PortletPropsValues.PERMEANCE_LOG_VIEWER_PATTERN;
 
                 final Object patternLayoutObj = patternLayout.getConstructor(String.class).newInstance(pattern);
 
@@ -61,13 +58,13 @@ public class LogHolder {
                 final Thread t = new Thread(runnable);
                 t.start();
 
-                final Class writerAppender = portalClassLoader.loadClass("org.apache.log4j.WriterAppender");
+                final Class writerAppender = portalClassLoader.loadClass(PortletConstants.LOG4J_WRITER_APPENDER_CLASS);
 
-                final Class appender = portalClassLoader.loadClass("org.apache.log4j.Appender");
-                final Class layout = portalClassLoader.loadClass("org.apache.log4j.Layout");
+                final Class appender = portalClassLoader.loadClass(PortletConstants.LOG4J_APPENDER_CLASS);
+                final Class layout = portalClassLoader.loadClass(PortletConstants.LOG4J_LAYOUT_CLASS);
                 writerAppenderObj = writerAppender.getConstructor(layout, Writer.class).newInstance(patternLayoutObj, pwriter);
 
-                logger.getMethod("addAppender", appender).invoke(rootLoggerObj, writerAppenderObj);
+                logger.getMethod(PortletConstants.ADD_APPENDER, appender).invoke(rootLoggerObj, writerAppenderObj);
                 attached = true;
             } catch (final Exception e) {
                 log.error(e);
@@ -82,10 +79,10 @@ public class LogHolder {
                 runnable.setStop(true);
 
                 final ClassLoader portalClassLoader = PortalClassLoaderUtil.getClassLoader();
-                final Class logger = portalClassLoader.loadClass("org.apache.log4j.Logger");
-                final Object rootLoggerObj = logger.getMethod("getRootLogger").invoke(null);
-                final Class appender = portalClassLoader.loadClass("org.apache.log4j.Appender");
-                logger.getMethod("removeAppender", appender).invoke(rootLoggerObj, writerAppenderObj);
+                final Class logger = portalClassLoader.loadClass(PortletConstants.LOG4J_LOGGER_CLASS);
+                final Object rootLoggerObj = logger.getMethod(PortletConstants.GET_ROOT_LOGGER).invoke(null);
+                final Class appender = portalClassLoader.loadClass(PortletConstants.LOG4J_APPENDER_CLASS);
+                logger.getMethod(PortletConstants.REMOVE_APPENDER, appender).invoke(rootLoggerObj, writerAppenderObj);
             } catch (final Exception e) {
                 log.warn(e);
             }
@@ -127,7 +124,7 @@ public class LogHolder {
                     }
 
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(PortletPropsValues.PERMEANCE_LOG_VIEWER_SLEEP_INTERVAL);
                     } catch (final InterruptedException ie) {
                     }
                 }

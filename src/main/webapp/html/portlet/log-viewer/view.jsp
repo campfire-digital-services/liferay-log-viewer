@@ -14,6 +14,8 @@ not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ include file="init.jsp"%>
 <%@page import="com.permeance.utility.logviewer.portlets.LogHolder"%>
+<%@page import="com.permeance.utility.logviewer.portlets.LogViewerPortlet"%>
+<%@page import="com.permeance.utility.logviewer.portlets.PortletPropsValues"%>
 
 <liferay-ui:success key="success"
 	message="ui-request-processed-successfully" />
@@ -28,7 +30,7 @@ not, see <http://www.gnu.org/licenses/>.
 		AUI().use('aui-io-request', function(A){  
 			A.io.request(resourceMappingUrl, {
 			    method: 'POST', data: {
-			        "pointer": window.resourcePointer
+			        "<%=LogViewerPortlet.ATTRIB_POINTER %>": window.resourcePointer
 			    },
 			    dataType: 'json',
 			    on: {
@@ -45,11 +47,11 @@ not, see <http://www.gnu.org/licenses/>.
 	}
 
 	function detachlogger() {
-	 	return sendCmd('detach');   
+	 	return sendCmd('<%=LogViewerPortlet.OP_DETACH %>');   
 	}
 	
 	function attachlogger() {
-	 	return sendCmd('attach');   
+	 	return sendCmd('<%=LogViewerPortlet.OP_ATTACH %>');   
 	}
 	
 	function sendCmd(mycmd) {
@@ -57,13 +59,13 @@ not, see <http://www.gnu.org/licenses/>.
 		AUI().use('aui-io-request', function(A){  
 			A.io.request(resourceMappingUrl, {
 			    method: 'POST', data: {
-			        "cmd": mycmd
+			        "<%=LogViewerPortlet.PARAM_OP %>": mycmd
 			    },
 			    dataType: 'json',
 			    on: {
 			        success: function() {
 			            var result = this.get('responseData').result;
-			            if(result == 'error') {
+			            if(result == '<%=LogViewerPortlet.RESULT_ERROR %>') {
 							alert(this.get('responseData').error);			                
 			            }
 			        }
@@ -73,10 +75,10 @@ not, see <http://www.gnu.org/licenses/>.
 	}
 	
 	
-	var t = setInterval(poll, 2000);
+	var t = setInterval(poll, <%=Long.toString(PortletPropsValues.PERMEANCE_LOG_VIEWER_REFRESH_INTERVAL) %>);
 </script>
 
-<liferay-ui:message key="the-logger-is-currently"/> <span id="viewlogmode"><liferay-ui:message key="waiting-for-status"/></span>. <liferay-ui:message key="polling-every-2-seconds"/><br/>
+<liferay-ui:message key="the-logger-is-currently"/> <span id="viewlogmode"><liferay-ui:message key="waiting-for-status"/></span>. <liferay-ui:message key="polling-every-x-seconds" arguments="<%=new String[] {PortletPropsValues.PERMEANCE_LOG_VIEWER_REFRESH_INTERVAL_DISPLAY_SECONDS} %>" /><br/>
 <input type="button" onClick="attachlogger(); return false;" value="<liferay-ui:message key="attach-logger"/>" />&nbsp;&nbsp;<input type="button" onClick="detachlogger(); return false;" value="<liferay-ui:message key="detach-logger"/>" /><br/>
 <em><liferay-ui:message key="you-can-set-portal-property"/> <b>permeance.log.viewer.autoattach</b> <liferay-ui:message key="autoattach-description"/></em><br/>
 <em><liferay-ui:message key="you-can-set-portal-property"/> <b>permeance.log.viewer.pattern</b> <liferay-ui:message key="pattern-description"/></em><br/><br/>

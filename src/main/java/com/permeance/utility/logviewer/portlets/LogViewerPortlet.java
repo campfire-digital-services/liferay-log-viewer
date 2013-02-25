@@ -42,16 +42,36 @@ public class LogViewerPortlet extends MVCPortlet {
 
     public static final Log log = LogFactoryUtil.getLog(LogViewerPortlet.class);
 
+    public static final String VIEW_PAGE = "/html/portlet/log-viewer/view.jsp";
+    public static final String ERROR_PAGE = "/html/portlet/log-viewer/error.jsp";
+
+    public static final String ATTRIB_ERROR = "error";
+    public static final String ATTRIB_TRACE = "trace";
+    public static final String ATTRIB_RESULT = "result";
+    public static final String RESULT_SUCCESS = "success";
+    public static final String RESULT_ERROR = "error";
+
+    public static final String PARAM_OP = "cmd";
+    public static final String OP_ATTACH = "attach";
+    public static final String OP_DETACH = "detach";
+
+    public static final String ATTRIB_MODE = "mode";
+    public static final String ATTRIB_CONTENT = "content";
+    public static final String ATTRIB_POINTER = "pointer";
+
+    public static final String MODE_ATTACHED = "attached";
+    public static final String MODE_DETACHED = "detached";
+
     /**
      * view method
      */
     @Override
     public void doView(final RenderRequest renderRequest, final RenderResponse renderResponse) throws IOException, PortletException {
         try {
-            include("/html/portlet/log-viewer/view.jsp", renderRequest, renderResponse);
+            include(VIEW_PAGE, renderRequest, renderResponse);
         } catch (final Exception e) {
             log.warn(e);
-            include("/html/portlet/log-viewer/error.jsp", renderRequest, renderResponse);
+            include(ERROR_PAGE, renderRequest, renderResponse);
         }
     }
 
@@ -61,16 +81,16 @@ public class LogViewerPortlet extends MVCPortlet {
     @Override
     public void serveResource(final ResourceRequest resourceRequest, final ResourceResponse resourceResponse) {
         try {
-            resourceResponse.setContentType("text/json");
-            resourceResponse.addProperty(HttpHeaders.CACHE_CONTROL, "no-cache");
+            resourceResponse.setContentType(PortletConstants.MIME_TYPE_JSON);
+            resourceResponse.addProperty(HttpHeaders.CACHE_CONTROL, PortletConstants.NO_CACHE);
 
-            final String cmd = resourceRequest.getParameter("cmd");
+            final String cmd = resourceRequest.getParameter(PARAM_OP);
 
-            if ("attach".equals(cmd)) {
+            if (OP_ATTACH.equals(cmd)) {
                 try {
                     LogHolder.attach();
                     final JSONObject obj = JSONFactoryUtil.createJSONObject();
-                    obj.put("result", "success");
+                    obj.put(ATTRIB_RESULT, RESULT_SUCCESS);
                     resourceResponse.getWriter().print(obj.toString());
                 } catch (final Exception e) {
                     final StringWriter sw = new StringWriter();
@@ -80,37 +100,37 @@ public class LogViewerPortlet extends MVCPortlet {
                     sw.close();
 
                     final JSONObject obj = JSONFactoryUtil.createJSONObject();
-                    obj.put("result", "error");
-                    obj.put("error", e.toString());
-                    obj.put("trace", sw.toString());
+                    obj.put(ATTRIB_RESULT, RESULT_ERROR);
+                    obj.put(ATTRIB_ERROR, e.toString());
+                    obj.put(ATTRIB_TRACE, sw.toString());
 
                     resourceResponse.getWriter().print(obj.toString());
 
                     log.error(e);
                 }
-            } else if ("detach".equals(cmd)) {
+            } else if (OP_DETACH.equals(cmd)) {
                 LogHolder.detach();
                 final JSONObject obj = JSONFactoryUtil.createJSONObject();
-                obj.put("result", "success");
+                obj.put(ATTRIB_RESULT, RESULT_SUCCESS);
                 resourceResponse.getWriter().print(obj.toString());
             } else {
 
-                final int pointer = GetterUtil.getInteger(resourceRequest.getParameter("pointer"), -1);
+                final int pointer = GetterUtil.getInteger(resourceRequest.getParameter(ATTRIB_POINTER), -1);
 
                 final RollingLogViewer viewer = LogHolder.getViewer();
 
                 int curpointer = -1;
                 String content = StringPool.BLANK;
-                String mode = "detached";
+                String mode = MODE_DETACHED;
                 if (viewer != null) {
                     curpointer = viewer.getCurrentPointer();
                     content = new String(viewer.getBuffer(pointer, curpointer));
-                    mode = "attached";
+                    mode = MODE_ATTACHED;
                 }
                 final JSONObject obj = JSONFactoryUtil.createJSONObject();
-                obj.put("pointer", Integer.toString(curpointer));
-                obj.put("content", content);
-                obj.put("mode", mode);
+                obj.put(ATTRIB_POINTER, Integer.toString(curpointer));
+                obj.put(ATTRIB_CONTENT, content);
+                obj.put(ATTRIB_MODE, mode);
 
                 resourceResponse.getWriter().print(obj.toString());
             }

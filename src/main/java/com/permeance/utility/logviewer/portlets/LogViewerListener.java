@@ -16,8 +16,6 @@ package com.permeance.utility.logviewer.portlets;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.PropsUtil;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -32,11 +30,11 @@ public class LogViewerListener implements ServletContextListener {
 
     private static final Log log = LogFactoryUtil.getLog(LogViewerListener.class);
 
-    public void contextInitialized(final ServletContextEvent arg0) {
+    public void contextInitialized(final ServletContextEvent event) {
         startApplication();
     }
 
-    public void contextDestroyed(final ServletContextEvent arg0) {
+    public void contextDestroyed(final ServletContextEvent event) {
         stopApplication();
     }
 
@@ -48,7 +46,7 @@ public class LogViewerListener implements ServletContextListener {
             log.info("Log Viewer Startup");
 
             try {
-                final boolean autoAttach = GetterUtil.getBoolean(PropsUtil.get("permeance.log.viewer.autoattach"), true);
+                final boolean autoAttach = PortletPropsValues.PERMEANCE_LOG_VIEWER_AUTOATTACH_ENABLED;
 
                 if (autoAttach) {
                     log.info("Autoattaching logger");
