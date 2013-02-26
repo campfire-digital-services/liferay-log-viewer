@@ -18,7 +18,7 @@ not, see <http://www.gnu.org/licenses/>.
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 	<listener>
-		<listener-class>com.permeance.utility.logviewer.portlets.LogViewerListener</listener-class>
+		<listener-class>au.com.permeance.utility.logviewer.portlets.LogViewerListener</listener-class>
 	</listener>
 	
 	<!-- 
@@ -26,7 +26,7 @@ not, see <http://www.gnu.org/licenses/>.
 	 -->	
 	<servlet>
 		<servlet-name>Startup</servlet-name>
-		<servlet-class>com.permeance.utility.logviewer.portlets.StartupServlet</servlet-class>
+		<servlet-class>au.com.permeance.utility.logviewer.portlets.StartupServlet</servlet-class>
 		<load-on-startup>0</load-on-startup>
 	</servlet>
 </web-app>

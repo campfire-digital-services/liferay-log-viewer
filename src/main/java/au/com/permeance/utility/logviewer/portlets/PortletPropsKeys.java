@@ -13,7 +13,7 @@
  * not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.permeance.utility.logviewer.portlets;
+package au.com.permeance.utility.logviewer.portlets;
 
 
 /**

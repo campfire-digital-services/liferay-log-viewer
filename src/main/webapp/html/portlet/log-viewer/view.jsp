@@ -13,9 +13,9 @@ You should have received a copy of the GNU General Public License along with thi
 not, see <http://www.gnu.org/licenses/>.
 --%>
 <%@ include file="init.jsp"%>
-<%@page import="com.permeance.utility.logviewer.portlets.LogHolder"%>
-<%@page import="com.permeance.utility.logviewer.portlets.LogViewerPortlet"%>
-<%@page import="com.permeance.utility.logviewer.portlets.PortletPropsValues"%>
+<%@page import="au.com.permeance.utility.logviewer.portlets.LogHolder"%>
+<%@page import="au.com.permeance.utility.logviewer.portlets.LogViewerPortlet"%>
+<%@page import="au.com.permeance.utility.logviewer.portlets.PortletPropsValues"%>
 
 <liferay-ui:success key="success"
 	message="ui-request-processed-successfully" />

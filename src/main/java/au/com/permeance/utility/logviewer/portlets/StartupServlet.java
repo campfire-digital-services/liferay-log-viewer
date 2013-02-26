@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License along with this program. If
  * not, see <http://www.gnu.org/licenses/>.
  */
-package com.permeance.utility.logviewer.portlets;
+package au.com.permeance.utility.logviewer.portlets;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

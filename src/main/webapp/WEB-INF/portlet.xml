@@ -21,7 +21,7 @@ not, see <http://www.gnu.org/licenses/>.
 	<portlet>
 		<portlet-name>log-viewer</portlet-name>
 		<display-name>Log Viewer</display-name>
-		<portlet-class>com.permeance.utility.logviewer.portlets.LogViewerPortlet</portlet-class>
+		<portlet-class>au.com.permeance.utility.logviewer.portlets.LogViewerPortlet</portlet-class>
 		<expiration-cache>0</expiration-cache>
 		<supports>
 			<mime-type>text/html</mime-type>
