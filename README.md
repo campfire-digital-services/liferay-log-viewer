@@ -54,6 +54,9 @@ eg.
 
 Deploy "liferay-log-viewer-portlet-1.0.0.0.war" to "LIFERAY_HOME/deploy" folder.
 
+## License
+
+Liferay Log Viewer is available under GNU Public License version 3.0 (GPLv3). A copy of the license is attached in the code package.
 
 ## Project Team
 
