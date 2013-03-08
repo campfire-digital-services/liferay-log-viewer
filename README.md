@@ -15,6 +15,7 @@ This project provides a portlet that attaches to the Liferay Portal's log4j mech
 
 The latest releases are available from [SourceForge](http://sourceforge.net/projects/permeance-apps/files/liferay-log-viewer/ "Liferay Log Viewer").
 
+You can also download or install the portlet from [Liferay Marketplace](http://www.liferay.com/marketplace/-/mp/application/21793045?_7_WAR_osbportlet_backURL=%2Fmarketplace%2F-%2Fmp%2Fcategory%2F11232561 "Liferay Log Viewer")
 
 ## Usage
 
