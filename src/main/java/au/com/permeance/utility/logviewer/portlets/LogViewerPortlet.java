@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
@@ -124,7 +125,7 @@ public class LogViewerPortlet extends MVCPortlet {
                 String mode = MODE_DETACHED;
                 if (viewer != null) {
                     curpointer = viewer.getCurrentPointer();
-                    content = new String(viewer.getBuffer(pointer, curpointer));
+                    content = HtmlUtil.escape(new String(viewer.getBuffer(pointer, curpointer)));
                     mode = MODE_ATTACHED;
                 }
                 final JSONObject obj = JSONFactoryUtil.createJSONObject();

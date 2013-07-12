@@ -53,7 +53,7 @@ NOTE: You will require JDK 1.6+ and Maven 3.
 
 eg.
 
-Deploy "liferay-log-viewer-portlet-1.0.0.0.war" to "LIFERAY_HOME/deploy" folder.
+Deploy "liferay-log-viewer-portlet-1.0.0.1.war" to "LIFERAY_HOME/deploy" folder.
 
 ## License
 
