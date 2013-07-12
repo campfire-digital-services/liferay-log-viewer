@@ -32,21 +32,10 @@ Two portal properties can be set:
 * *permeance.log.viewer.pattern* to configure the log4j pattern, default "%d{ABSOLUTE} %-5p \[%c{1}:%L\] %m%n"
 
 
-## PACL disabled
+## Plugin Security
 
-This app is being shipped with Liferay PACL disabled, since a number of users have reflected issues with it on their instances. 
-However, the app ships with the required PACL configuration required to run it in PACL enabled mode.
-
-If you wish to run the app with PACL turned on, you can modify the file: /WEB-INF/liferay-plugin-package.properties
-and change the following property:
-
-    security-manager-enabled=false
-
-to:
-
-    security-manager-enabled=true
-
-and then restart Liferay.
+This plugin comes with the PACL Security Manager disabled. 
+However the list of PACL requirements to run this plugin in secure mode is available (commented out) in WEB-INF/liferay-plugin-package.properties. You can uncomment those entries to run the plugin in PACL secure mode.
 
 
 ## Building
