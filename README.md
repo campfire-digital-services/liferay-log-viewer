@@ -42,7 +42,7 @@ Step 2. Build and package
 
     % mvn  -U  clean  package
 
-This will build "liferay-log-viewer-portlet-XXX.war" in the targets tolder.
+This will build "liferay-log-viewer-portlet-XXXX.war" in the targets tolder.
 
 NOTE: You will require JDK 1.6+ and Maven 3.
 
@@ -53,7 +53,7 @@ NOTE: You will require JDK 1.6+ and Maven 3.
 
 eg.
 
-Deploy "liferay-log-viewer-portlet-1.0.0.1.war" to "LIFERAY_HOME/deploy" folder.
+Deploy "liferay-log-viewer-portlet-XXXX.war" to "LIFERAY_HOME/deploy" folder.
 
 ## License
 
