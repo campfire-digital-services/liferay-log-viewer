@@ -7,8 +7,8 @@ This project provides a portlet that attaches to the Liferay Portal's log4j mech
 
 ## Supported Products
 
-* Liferay Portal 6.1 CE GA2 (6.1.1+)
-* Liferay Portal 6.1 EE GA2 (6.1.20+)
+* Liferay Portal 6.1 CE GA2, GA3 (6.1.1+)
+* Liferay Portal 6.1 EE GA2, GA3 (6.1.20+)
 
 
 ## Downloads
