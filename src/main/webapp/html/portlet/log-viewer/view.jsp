@@ -23,7 +23,8 @@ not, see <http://www.gnu.org/licenses/>.
 	message="ui-request-processed-error" />
 
 <script type='text/javascript'>
-
+	window.errorThreshold = 10;
+	window.consecutiveErrorCount = 0;
 	window.resourcePointer = "-1";
 	function poll() {
 	    var resourceMappingUrl = '<portlet:resourceURL/>';
@@ -35,12 +36,37 @@ not, see <http://www.gnu.org/licenses/>.
 			    dataType: 'json',
 			    on: {
 			        success: function() {
-			            if(typeof this.get('responseData') != 'undefined') {
-				            window.resourcePointer = this.get('responseData').pointer;
-				            document.getElementById("viewlog").innerHTML = document.getElementById("viewlog").innerHTML + this.get('responseData').content;
-				            document.getElementById("viewlogmode").innerHTML = this.get('responseData').mode;
+			            try {
+				            if(typeof this.get('responseData') != 'undefined') {
+					            window.resourcePointer = this.get('responseData').pointer;
+					            document.getElementById("viewlog").innerHTML = document.getElementById("viewlog").innerHTML + this.get('responseData').content;
+					            document.getElementById("viewlogmode").innerHTML = this.get('responseData').mode;
+				                window.consecutiveErrorCount=0;
+				            } else {
+				                window.consecutiveErrorCount++;
+				                if(window.consecutiveErrorCount >= window.errorThreshold) {
+				                    clearTimeout(window.pollingIntervalId);
+				                    alert("Polling of the log has been stopped as the poll error limit has been reached. Please refresh the page to restart polling.");
+				                    document.getElementById("viewlog").innerHTML = document.getElementById("viewlog").innerHTML + "\n\n\n------\nPolling of the log has been stopped as the poll error limit has been reached. Please refresh the page to restart polling.\n------";
+				                }
+				            }
+			            } catch(err) {
+			                window.consecutiveErrorCount++;
+			                if(window.consecutiveErrorCount >= window.errorThreshold) {
+			                    clearTimeout(window.pollingIntervalId);
+			                    alert("Polling of the log has been stopped as the poll error limit has been reached. Please refresh the page to restart polling.");
+			                    document.getElementById("viewlog").innerHTML = document.getElementById("viewlog").innerHTML + "\n\n\n------\nPolling of the log has been stopped as the poll error limit has been reached. Please refresh the page to restart polling.\n------";
+			                }
 			            }
-			        }
+			        },
+			    	failure: function() {
+		                window.consecutiveErrorCount++;
+		                if(window.consecutiveErrorCount >= window.errorThreshold) {
+		                    clearTimeout(window.pollingIntervalId);
+		                    alert("Polling of the log has been stopped as the poll error limit has been reached. Please refresh the page to restart polling.");
+		                    document.getElementById("viewlog").innerHTML = document.getElementById("viewlog").innerHTML + "\n\n\n------\nPolling of the log has been stopped as the poll error limit has been reached. Please refresh the page to restart polling.\n------";
+		                }
+			    	}
 			    }
 			});
 		});
@@ -75,7 +101,7 @@ not, see <http://www.gnu.org/licenses/>.
 	}
 	
 	
-	var t = setInterval(poll, <%=Long.toString(PortletPropsValues.PERMEANCE_LOG_VIEWER_REFRESH_INTERVAL) %>);
+	window.pollingIntervalId = setInterval(poll, <%=Long.toString(PortletPropsValues.PERMEANCE_LOG_VIEWER_REFRESH_INTERVAL) %>);
 </script>
 
 <liferay-ui:message key="the-logger-is-currently"/> <span id="viewlogmode"><liferay-ui:message key="waiting-for-status"/></span>. <liferay-ui:message key="polling-every-x-seconds" arguments="<%=new String[] {PortletPropsValues.PERMEANCE_LOG_VIEWER_REFRESH_INTERVAL_DISPLAY_SECONDS} %>" /><br/>
