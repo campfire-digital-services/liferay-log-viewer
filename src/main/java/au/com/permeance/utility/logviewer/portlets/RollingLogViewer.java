@@ -34,19 +34,33 @@ public class RollingLogViewer {
     private final char[] intbuf;
 
     private int pnt;
+    private boolean bufwrapped = false;
 
     public RollingLogViewer() {
         intbuf = new char[CHAR_SIZE];
         pnt = 0;
     }
 
-    public synchronized void write(final char[] buf, final int offset, final int length) {
+    public synchronized void write(final char[] buf, final int origoffset, final int origlength) {
+        int offset = origoffset;
+        int length = origlength;
+
+        if (length > intbuf.length) {
+            // there is going to be log truncation because the log volume in larger than the buffer
+            offset = offset + (length - intbuf.length);
+            length = intbuf.length;
+        }
+
         if (pnt + length > intbuf.length) {
             final int offlength = intbuf.length - pnt;
             System.arraycopy(buf, offset, intbuf, pnt, offlength);
             System.arraycopy(buf, offset + offlength, intbuf, 0, length - offlength);
         } else {
             System.arraycopy(buf, offset, intbuf, pnt, length);
+        }
+
+        if (pnt + length >= intbuf.length) {
+            bufwrapped = true;
         }
 
         pnt = (pnt + length) % intbuf.length;
@@ -58,8 +72,20 @@ public class RollingLogViewer {
 
     public char[] getBuffer(final int oldpointerparam, final int newpointer) {
         int oldpointer = oldpointerparam;
+
+        if (!bufwrapped && newpointer < oldpointer) {
+            oldpointer = -1;
+        }
+
         if (oldpointer == -1) {
-            oldpointer = ((newpointer - BACK_FILL_SIZE) + intbuf.length) % intbuf.length;
+            if (bufwrapped) {
+                oldpointer = ((newpointer - BACK_FILL_SIZE) + intbuf.length) % intbuf.length;
+            } else {
+                oldpointer = newpointer - BACK_FILL_SIZE;
+                if (oldpointer < 0) {
+                    oldpointer = 0;
+                }
+            }
         }
 
         if (newpointer == oldpointer) {
