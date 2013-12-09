@@ -9,6 +9,8 @@ This project provides a portlet that attaches to the Liferay Portal's log4j mech
 
 * Liferay Portal 6.1 CE GA2, GA3 (6.1.1+)
 * Liferay Portal 6.1 EE GA2, GA3 (6.1.20+)
+* Liferay Portal 6.2 CE GA1 (6.2.0+)
+* Liferay Portal 6.2 EE GA1 (6.2.10+)
 
 
 ## Downloads
@@ -19,12 +21,15 @@ You can also download or install the portlet from [Liferay Marketplace](http://w
 
 ## Usage
 
-Administrators will see a "Log Viewer" portlet in the Server area of the Control Panel.
+Administrators will see a "Log Viewer" portlet in the Server area of the Control Panel in 6.1.
+In 6.2, it is present in the Apps section of the Control Panel
 Other users can also be assigned permissions to see the Log Viewer Portlet.
 
 ![Log Viewer Portlet](/doc/images/log-viewer-screenshot.png "Log Viewer Portlet")
 
-The page polls the log buffer every 2 seconds to update the page with the latest logs.
+![Log Viewer Portlet](/doc/images/log-viewer-6.2.png "Log Viewer Portlet")
+
+The portlet polls the log buffer every 2 seconds to update the page with the latest logs.
 You can also attach or detach the logger from the portal log4j. (when detached, the portlet does not cause any overhead on portal operations).
 
 Two portal properties can be set:

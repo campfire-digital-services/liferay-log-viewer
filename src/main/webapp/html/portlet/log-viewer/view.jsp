@@ -31,7 +31,7 @@ not, see <http://www.gnu.org/licenses/>.
 		AUI().use('aui-io-request', function(A){  
 			A.io.request(resourceMappingUrl, {
 			    method: 'POST', data: {
-			        "<%=LogViewerPortlet.ATTRIB_POINTER %>": window.resourcePointer
+			        "<portlet:namespace/><%=LogViewerPortlet.ATTRIB_POINTER %>": window.resourcePointer
 			    },
 			    dataType: 'json',
 			    on: {
@@ -85,7 +85,7 @@ not, see <http://www.gnu.org/licenses/>.
 		AUI().use('aui-io-request', function(A){  
 			A.io.request(resourceMappingUrl, {
 			    method: 'POST', data: {
-			        "<%=LogViewerPortlet.PARAM_OP %>": mycmd
+			        "<portlet:namespace/><%=LogViewerPortlet.PARAM_OP %>": mycmd
 			    },
 			    dataType: 'json',
 			    on: {
