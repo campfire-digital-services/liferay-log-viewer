@@ -13,7 +13,7 @@
 
 	<groupId>au.com.permeance.utility</groupId>
 	<artifactId>liferay-log-viewer-portlet</artifactId>
-	<version>1.0.3.1</version>
+	<version>LR6-1.0.3.1</version>
 	<packaging>war</packaging>
 
 	<properties>
